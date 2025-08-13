@@ -3,6 +3,7 @@
 
 # Vars
 KIND_CLUSTER    := kind
+KIND_CONFIG     := kind-config.yaml
 KYVERNO_NS      := kyverno
 KYVERNO_RELEASE := kyverno
 POLICIES_FILE   := policies.yaml
@@ -18,7 +19,7 @@ help: ## Show help for each target
 
 .PHONY: create-cluster
 create-cluster: ## Create a Kind cluster
-	@kind create cluster --name $(KIND_CLUSTER)
+	@kind create cluster --name $(KIND_CLUSTER) --config $(KIND_CONFIG)
 
 .PHONY: delete-cluster
 delete-cluster: ## Delete the Kind cluster

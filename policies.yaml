@@ -3,6 +3,18 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: label-pss-on-new-ns
+  annotations:
+    policies.kyverno.io/title: Add Pod Disruption Budget
+    policies.kyverno.io/category: Sample
+    kyverno.io/kyverno-version: 1.6.2
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/subject: Deployment
+    policies.kyverno.io/description: >-
+      A PodDisruptionBudget limits the number of Pods of a replicated application that
+      are down simultaneously from voluntary disruptions. For example, a quorum-based
+      application would like to ensure that the number of replicas running is never brought
+      below the number needed for a quorum. As an application owner, you can create a PodDisruptionBudget (PDB)
+      for each application. This policy will create a PDB resource whenever a new Deployment is created.
 spec:
   validationFailureAction: Audit
   background: false
@@ -42,6 +54,18 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: generate-limitrange-per-namespace
+  annotations:
+    policies.kyverno.io/title: Add Pod Disruption Budget
+    policies.kyverno.io/category: Sample
+    kyverno.io/kyverno-version: 1.6.2
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/subject: Deployment
+    policies.kyverno.io/description: >-
+      A PodDisruptionBudget limits the number of Pods of a replicated application that
+      are down simultaneously from voluntary disruptions. For example, a quorum-based
+      application would like to ensure that the number of replicas running is never brought
+      below the number needed for a quorum. As an application owner, you can create a PodDisruptionBudget (PDB)
+      for each application. This policy will create a PDB resource whenever a new Deployment is created.
 spec:
   validationFailureAction: Audit
   background: false
@@ -93,6 +117,18 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: generate-resourcequota-per-namespace
+  annotations:
+    policies.kyverno.io/title: Add Pod Disruption Budget
+    policies.kyverno.io/category: Sample
+    kyverno.io/kyverno-version: 1.6.2
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/subject: Deployment
+    policies.kyverno.io/description: >-
+      A PodDisruptionBudget limits the number of Pods of a replicated application that
+      are down simultaneously from voluntary disruptions. For example, a quorum-based
+      application would like to ensure that the number of replicas running is never brought
+      below the number needed for a quorum. As an application owner, you can create a PodDisruptionBudget (PDB)
+      for each application. This policy will create a PDB resource whenever a new Deployment is created.
 spec:
   validationFailureAction: Audit
   background: false
@@ -142,6 +178,18 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: generate-netpol-default-deny-per-namespace
+  annotations:
+    policies.kyverno.io/title: Add Pod Disruption Budget
+    policies.kyverno.io/category: Sample
+    kyverno.io/kyverno-version: 1.6.2
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/subject: Deployment
+    policies.kyverno.io/description: >-
+      A PodDisruptionBudget limits the number of Pods of a replicated application that
+      are down simultaneously from voluntary disruptions. For example, a quorum-based
+      application would like to ensure that the number of replicas running is never brought
+      below the number needed for a quorum. As an application owner, you can create a PodDisruptionBudget (PDB)
+      for each application. This policy will create a PDB resource whenever a new Deployment is created.
 spec:
   validationFailureAction: Audit
   background: false
@@ -182,6 +230,18 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: enforce-restricted-securitycontext
+  annotations:
+    policies.kyverno.io/title: Add Pod Disruption Budget
+    policies.kyverno.io/category: Sample
+    kyverno.io/kyverno-version: 1.6.2
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/subject: Deployment
+    policies.kyverno.io/description: >-
+      A PodDisruptionBudget limits the number of Pods of a replicated application that
+      are down simultaneously from voluntary disruptions. For example, a quorum-based
+      application would like to ensure that the number of replicas running is never brought
+      below the number needed for a quorum. As an application owner, you can create a PodDisruptionBudget (PDB)
+      for each application. This policy will create a PDB resource whenever a new Deployment is created.
 spec:
   validationFailureAction: Audit # use Enforce to block instead of warn
   background: true
@@ -246,3 +306,36 @@ spec:
         spec:
           minAvailable: 1
           selector: "{{request.object.spec.selector}}"
+
+
+---
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: block-namespace-with-tld
+  annotations:
+    policies.kyverno.io/title: Block Namespace Creation with TLD
+    policies.kyverno.io/category: Namespace Governance
+    kyverno.io/kyverno-version: 1.6.2
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      Prevents the creation of namespaces whose names end with a top-level domain
+      such as .com, .org, .net, .io, and others. This helps avoid confusion with
+      internet domain names and enforces naming standards within the cluster.
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: deny-tld-namespaces
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      validate:
+        message: "Namespaces cannot have names ending with a top-level domain."
+        pattern:
+          metadata:
+            name: "!*.com|!*.org|!*.net|!*.io|!*.co|!*.gov|!*.edu|!*.mil|!*.biz|!*.info|!*.xyz|!*.tech|!*.dev|!*.app|!*.ai|!*.me|!*.us|!*.uk|!*.ca|!*.au|!*.de|!*.jp|!*.fr|!*.in|!*.cn"
